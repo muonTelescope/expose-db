@@ -1,0 +1,17 @@
+{
+  "name": "expose-db",
+  "version": "1.0.0",
+  "description": "Serves database info to connected clients",
+  "author": "Sawaiz Syed asyed5@gsu.edu",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm install --no-bin-links && nodemon -L --debug=5858 server.js"
+  },
+  "dependencies": {
+    "mysql": "*",
+    "sequelize": "*",
+    "uuid": "*",
+    "express": "*",
+    "ws": "*"
+  }
+}
