@@ -61,7 +61,16 @@ var router = express.Router();              // get an instance of the express Ro
 
 // Base route with info (accessed at GET http://localhost:80/api/db)
 router.get('/', function (req, res) {
-    res.send("<p>Welcome to the API '/', availible options are /tableName , /add/tableName</p>");
+    // Make a list of all tables to list
+    var tableString = "Welcome to the API '/', availible options are /tableName , /add/tableName";
+    tableString += "\n\n";
+    tableString += "The availible tables are:";
+    tableString += "\n";
+    for(item in tables){
+        tableString += tables[item].name;
+        tableString += "\n";
+    }
+    res.send("<p>"+tableString+"</p>");
 });
 
 router.get('/:tableName', function (req, res) {
@@ -70,20 +79,17 @@ router.get('/:tableName', function (req, res) {
     var type = req.query.type;
 
     // If the table exists, return it.
-    var tableSelected = new dataAccess(getTableByName(tableName));
-    if (tableSelected) {
+    if (getTableByName(tableName)) {
+        var tableSelected = new dataAccess(getTableByName(tableName));
         switch (type) {
             case "json":
                 //serve json
-                var tableSelected = new dataAccess(getTableByName(tableName));
                 tableSelected.select(select).queryAll(function (dataResponse) {
                     res.send(dataResponse.json());
                 });
                 break;
-
             case "csv":
                 //serve csv                
-                var tableSelected = new dataAccess(getTableByName(tableName));
                 tableSelected.select(select).queryAll(function (dataResponse) {
                     res.send(dataResponse.csv());
                 });
@@ -91,17 +97,9 @@ router.get('/:tableName', function (req, res) {
             case "chart":
                 //serve google chart element compatible
                 tableSelected.select(select).limitDays(req.query.limitDays).queryAll(function (dataResponse) {
-                    res.send(dataResponse.averageMin(req.query.averageMin).chart());
+                    res.send(dataResponse.chart());
                 });
                 break;
-            case "test":
-                var lloydWright = new dataAccess(getTableByName("lloydWright"));
-                select = { attributes: ["createdAt", "Zero", "One"], where: { Zero: { $gte: 0 } } };
-                lloydWright.select(select).limitDays(0).queryAll(function (dataResponse) {
-                    res.send(dataResponse.averageMin(5).chart());
-                });
-                break;
-
             default:
                 //error, select a type
                 res.send("<p>Select parameter \"type\", json,csv.</p>");

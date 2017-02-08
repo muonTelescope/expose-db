@@ -22,7 +22,7 @@ More information on the availible commands on the select query string can be see
 Adding is done with a query string for peramters, and a API key that is a randomly generated UUID that is required for making changes.
 
 ```
-/lloydWright/add?Zero=3&One=5&apiKey=*****************
+/add/lloydWright?Zero=3&One=5&apiKey=*****************
 ```
 
 ## Installing

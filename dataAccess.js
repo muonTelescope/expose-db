@@ -20,8 +20,9 @@ var Sequelize = require("sequelize");
 
 module.exports = class dataAccess {
     constructor(sequlizeTable) {
+        console.log(sequlizeTable);
         this.table = sequlizeTable;  //the table we can query
-        this.alias = "testing"; // find the alias so others can compare
+        this.alias = sequlizeTable; // find the alias so others can compare
         this.select; //"the queryObject"
         this.data;
     }
@@ -32,11 +33,11 @@ module.exports = class dataAccess {
         return this;
     }
 
+    // Set to midnight tonight if limit is 0, no limit if negative, otherwise subtract exact number of days.
     limitDays(days) {
-        this.select.where = this.select.where || {};
-        this.select.where.createdAt = this.select.where.createdAt || {};
-        // Set to midnight tonight if limit is 0, no limit if negative, otherwise subtract exact number of days.
         if (days >= 0) {
+            this.select.where = this.select.where || {};
+            this.select.where.createdAt = this.select.where.createdAt || {};
             this.select.where.createdAt.$gte = new Date();
             if (days == 0) {
                 this.select.where.createdAt.$gte.setUTCHours(0, 0, 0, 0);
@@ -84,9 +85,11 @@ module.exports = class dataAccess {
     // Returns data formatted for google charts polymer element
     chart() {
         var formattedData = [];
-        formattedData.push(Object.keys(this.data[0].dataValues));
-        for (var line in this.data) {
-            formattedData.push(Object.values(this.data[line].dataValues));
+        if (this.data[0]) {
+            formattedData.push(Object.keys(this.data[0].dataValues));
+            for (var line in this.data) {
+                formattedData.push(Object.values(this.data[line].dataValues));
+            }
         }
         return formattedData;
     }
@@ -143,7 +146,6 @@ module.exports = class dataAccess {
                 }
                 // Increase the divisor
                 divisor++;
-
             } else {
                 average(line)
                 // The start time + time has been passed, push a new line onto the formateed data stack
