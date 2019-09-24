@@ -102,7 +102,7 @@ router.get('/:tableName', function (req, res) {
                 break;
             default:
                 //error, select a type
-                res.send("<p>Select parameter \"type\", json,csv.</p>");
+                res.send("<p>Select parameter \"type\", json, csv, or chart.</p>");
         }
     } else {
         var response = { error: "Table does not exist", tables: [] }
@@ -146,7 +146,7 @@ router.post('/add/:tableName', function (req, res) {
 });
 
 // REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
+// all of our routes will be prefixed with /api/db
 app.use('/api/db', router);
 
 // START THE SERVER
